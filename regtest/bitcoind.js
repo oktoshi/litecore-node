@@ -7,7 +7,7 @@ var index = require('..');
 var log = index.log;
 
 var chai = require('chai');
-var bitcore = require('litecore-lib');
+var bitcore = require('okcore-lib');
 var BN = bitcore.crypto.BN;
 var async = require('async');
 var rimraf = require('rimraf');
@@ -17,7 +17,7 @@ var bitcoind;
 var should = chai.should();
 var assert = chai.assert;
 var sinon = require('sinon');
-var BitcoinRPC = require('litecoind-rpc');
+var BitcoinRPC = require('okcashd-rpc');
 var transactionData = [];
 var blockHashes = [];
 var utxos;
@@ -46,7 +46,7 @@ describe('Bitcoind Functionality', function() {
       bitcoind = require('../').services.Bitcoin({
         spawn: {
           datadir: datadir,
-          exec: path.resolve(__dirname, '../bin/litecoind')
+          exec: path.resolve(__dirname, '../bin/okcashd')
         },
         node: {
           network: regtestNetwork,
@@ -331,7 +331,7 @@ describe('Bitcoind Functionality', function() {
       var tx = bitcore.Transaction();
       tx.from(utxos[0]);
       tx.change(privateKey.toAddress());
-      tx.to(destKey.toAddress(), utxos[0].amount * 1e8 - 10000);
+      tx.to(destKey.toAddress(), utxos[0].amount * 1e8 - 1000);
       tx.sign(bitcore.PrivateKey.fromWIF(utxos[0].privateKeyWIF));
 
       // test sending the transaction
@@ -349,7 +349,7 @@ describe('Bitcoind Functionality', function() {
       var tx = bitcore.Transaction();
       tx.from(utxos[1]);
       tx.change(privateKey.toAddress());
-      tx.to(destKey.toAddress(), utxos[1].amount * 1e8 - 10000);
+      tx.to(destKey.toAddress(), utxos[1].amount * 1e8 - 1000);
       bitcoind.sendTransaction(tx.uncheckedSerialize(), function(err, hash) {
         should.exist(err);
         (err instanceof Error).should.equal(true);
@@ -377,7 +377,7 @@ describe('Bitcoind Functionality', function() {
       var tx = bitcore.Transaction();
       tx.from(utxos[2]);
       tx.change(privateKey.toAddress());
-      tx.to(destKey.toAddress(), utxos[2].amount * 1e8 - 10000);
+      tx.to(destKey.toAddress(), utxos[2].amount * 1e8 - 1000);
       tx.sign(bitcore.PrivateKey.fromWIF(utxos[2].privateKeyWIF));
 
       var serialized = tx.serialize();
@@ -442,7 +442,8 @@ describe('Bitcoind Functionality', function() {
         tx.outputSatoshis.should.equal(50 * 1e8);
         tx.inputSatoshis.should.equal(0);
         tx.inputs.length.should.equal(1);
-        tx.outputs.length.should.equal(2); // segwit
+        // tx.outputs.length.should.equal(2); // segwit
+        tx.outputs.length.should.equal(1);
         should.equal(tx.inputs[0].prevTxId, null);
         should.equal(tx.inputs[0].outputIndex, null);
         tx.inputs[0].script.should.be.a('string');
