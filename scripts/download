@@ -11,7 +11,6 @@ tag="v6.9.0.0-core.aether"
 
 if [ "${platform}" == "linux" ]; then
     if [ "${arch}" == "x86_64" ]; then
-        tarball_name="litecoin-${version}-x86_64-linux-gnu.tar.gz"
         tarball_name="okcash-${version}-linux64.tar.gz"
     elif [ "${arch}" == "x86_32" ]; then
         tarball_name="okcash-${version}-linux32.tar.gz"
